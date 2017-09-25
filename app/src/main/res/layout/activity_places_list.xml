@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.shanan.gnbplaces.ui.PlacesList.PlacesListActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.shanan.gnbplaces.ui.PlacesList.PlacesListActivity">
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Hello World!" app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.shanan.gnbplaces.ui.PlacesList.PlacesListActivity">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/featured_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Hello World!" />
+
+        <TextView
+            android:id="@+id/explore_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Explore Places \n" />
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Load More" />
+
+    </LinearLayout>
+</ScrollView>
