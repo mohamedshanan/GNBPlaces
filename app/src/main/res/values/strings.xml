@@ -2,4 +2,7 @@
     <string name="app_name">GNBPlaces</string>
     <string name="no_featured_places">No featured places!!</string>
     <string name="no_places">No places!!</string>
+
+    <string name="description">description</string>
+    <string name="price">$ %1$d</string>
 </resources>

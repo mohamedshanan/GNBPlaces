@@ -15,9 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.PlacesList.PlacesListActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".ui.places.PlacesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

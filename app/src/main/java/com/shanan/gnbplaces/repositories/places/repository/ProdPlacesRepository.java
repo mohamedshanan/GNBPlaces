@@ -6,6 +6,7 @@ import com.shanan.gnbplaces.rest.ApiEndPointInterface;
 import com.shanan.gnbplaces.rest.ServiceGenerator;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -16,15 +17,17 @@ public class ProdPlacesRepository implements PlacesRepository {
 
     private static final String TAG = ProdPlacesRepository.class.getSimpleName();
     private boolean isLoading = false;
+    private Disposable disposable;
 
     public ProdPlacesRepository() {
     }
 
     @Override
     public void getFeaturedPlaces(OnPlacesResponse onPlacesResponse) {
+
         ApiEndPointInterface apiEndPointInterface = ServiceGenerator.getLocalPlacesEndPointInterface();
 
-        apiEndPointInterface.getFeaturedPlaces()
+        disposable = apiEndPointInterface.getFeaturedPlaces()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -55,7 +58,7 @@ public class ProdPlacesRepository implements PlacesRepository {
 
         ApiEndPointInterface apiEndPointInterface = ServiceGenerator.getLocalPlacesEndPointInterface();
 
-        apiEndPointInterface.explorePlaces(count, from)
+        disposable = apiEndPointInterface.explorePlaces(count, from)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -75,5 +78,12 @@ public class ProdPlacesRepository implements PlacesRepository {
 
     public boolean isLoading() {
         return isLoading;
+    }
+
+    @Override
+    public void unSubscribe() {
+        if (disposable != null && !disposable.isDisposed()){
+            disposable.dispose();
+        }
     }
 }

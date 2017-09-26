@@ -17,7 +17,7 @@ import butterknife.Unbinder;
  * Created by Shanan on 25/09/2017.
  */
 
-public class BaseSupportFragment extends Fragment {
+public class BaseFragment extends Fragment {
 
     private Unbinder unbinder;
 
