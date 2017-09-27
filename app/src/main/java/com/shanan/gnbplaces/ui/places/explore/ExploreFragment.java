@@ -1,6 +1,7 @@
 package com.shanan.gnbplaces.ui.places.explore;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.shanan.gnbplaces.R;
@@ -18,6 +22,7 @@ import com.shanan.gnbplaces.repositories.places.models.Place;
 import com.shanan.gnbplaces.ui.base.BaseFragment;
 import com.shanan.gnbplaces.ui.places.ImageListener;
 import com.shanan.gnbplaces.ui.places.OnPlaceClickListener;
+import com.shanan.gnbplaces.ui.places.PlaceDetailsActivity;
 import com.shanan.gnbplaces.utils.EndlessRecyclerViewScrollListener;
 import com.shanan.gnbplaces.utils.Utilities;
 import com.squareup.picasso.Picasso;
@@ -37,8 +42,14 @@ import butterknife.BindView;
  */
 public class ExploreFragment extends BaseFragment implements ExploreContract.View, ImageListener {
 
+    @BindView(R.id.container)
+    ViewGroup container;
     @BindView(R.id.recycler_view)
     RecyclerView placesRv;
+    @BindView(R.id.progressBar)
+    ProgressBar loader;
+    @BindView(R.id.no_data_tv)
+    TextView noDataView;
 
     private ExplorePresenter mPresenter;
     private OnPlaceClickListener mListener;
@@ -80,18 +91,16 @@ public class ExploreFragment extends BaseFragment implements ExploreContract.Vie
 
     private void setupPlacesRV(List<Place> places) {
         placesRv.setHasFixedSize(true);
-
         mLayoutManager = new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL);
         placesRv.setLayoutManager(mLayoutManager);
 
-        mPlacesAdapter = new PlacesAdapter(places, this);
+        mPlacesAdapter = new PlacesAdapter(places, this, mListener);
         placesRv.setAdapter(mPlacesAdapter);
 
         placesRv.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore() {
-                Log.d("Endless", "load more");
                 mPresenter.explorePlaces();
             }
         });
@@ -110,7 +119,7 @@ public class ExploreFragment extends BaseFragment implements ExploreContract.Vie
             mListener = (OnPlaceClickListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnExploreFragmentListener");
+                    + " must implement OnPlaceClickListener");
         }
     }
 
@@ -129,37 +138,39 @@ public class ExploreFragment extends BaseFragment implements ExploreContract.Vie
         } else {
             mPlacesAdapter.addPlaces(places);
         }
-
     }
 
     @Override
     public void showLoadMoreProgress() {
-
+        mPlacesAdapter.showLoadMoreProgress();
     }
 
     @Override
     public void dismissLoadMoreProgress() {
-
+        mPlacesAdapter.dismissLoadMoreProgress();
     }
 
     @Override
     public void showLoader() {
-
+        loader.setVisibility(View.VISIBLE);
+        placesRv.setVisibility(View.GONE);
     }
 
     @Override
     public void hideLoader() {
-
+        loader.setVisibility(View.GONE);
+        placesRv.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showSnackBar(int resId) {
-
+    public void showToast(int resId) {
+        Toast.makeText(getActivity(), getString(resId), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showTryAgainLayout(String message) {
-
+        noDataView.setVisibility(View.VISIBLE);
+        noDataView.setText(message);
     }
 
     @Override
@@ -169,7 +180,8 @@ public class ExploreFragment extends BaseFragment implements ExploreContract.Vie
 
     @Override
     public void showTryAgainLayout(int resId) {
-
+        noDataView.setVisibility(View.VISIBLE);
+        noDataView.setText(getString(resId));
     }
 
     @Override

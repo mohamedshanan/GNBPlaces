@@ -3,10 +3,13 @@ package com.shanan.gnbplaces.repositories.places.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 /**
  * Created by Shanan on 25/09/2017.
  */
 
+@Parcel
 public class Place {
     @SerializedName("id")
     @Expose

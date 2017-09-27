@@ -12,6 +12,7 @@ import com.shanan.gnbplaces.R;
 import com.shanan.gnbplaces.repositories.places.models.Image;
 import com.shanan.gnbplaces.repositories.places.models.Place;
 import com.shanan.gnbplaces.ui.places.ImageListener;
+import com.shanan.gnbplaces.ui.places.OnPlaceClickListener;
 
 import java.util.List;
 
@@ -29,10 +30,12 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<Place> mPlaces;
     private ImageListener mImageListener;
+    private  OnPlaceClickListener mOnPlaceClickListener;
 
-    public PlacesAdapter(List<Place> places, ImageListener imageListener) {
-        this.mPlaces = places;
-        this.mImageListener = imageListener;
+    public PlacesAdapter(List<Place> places, ImageListener imageListener, OnPlaceClickListener onPlaceClickListener) {
+        mPlaces = places;
+        mImageListener = imageListener;
+        mOnPlaceClickListener = onPlaceClickListener;
     }
 
     @Override public int getItemViewType(int position) {
@@ -67,6 +70,9 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 if (place.getImage() != null && mImageListener != null) {
                     mImageListener.displayImage(place.getImage(), placeViewHolder.placeImage);
                 }
+                placeViewHolder.item.setOnClickListener(view -> {
+                    mOnPlaceClickListener.onPlaceClick(place);
+                });
             }
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);

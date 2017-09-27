@@ -2,6 +2,7 @@ package com.shanan.gnbplaces.ui.places;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,12 +14,11 @@ import com.shanan.gnbplaces.repositories.places.models.Image;
 import com.shanan.gnbplaces.repositories.places.models.Place;
 import com.shanan.gnbplaces.ui.base.BaseActivity;
 import com.shanan.gnbplaces.ui.places.explore.ExploreFragment;
+import com.shanan.gnbplaces.ui.places.featured.FeaturedFragment;
 
 import butterknife.BindView;
 
 public class PlacesActivity extends BaseActivity implements OnPlaceClickListener {
-
-    private static final String TAG = PlacesActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,32 +29,24 @@ public class PlacesActivity extends BaseActivity implements OnPlaceClickListener
             return;
         }
 
-        // Create a new Fragment to be placed in the activity layout
-        ExploreFragment firstFragment = new ExploreFragment();
+        // Create featured Fragment to be placed in the featured section
+        FeaturedFragment featuredFragment = new FeaturedFragment();
 
-        // In case this activity was started with special instructions from an
-        // Intent, pass the Intent's extras to the fragment as arguments
-        firstFragment.setArguments(getIntent().getExtras());
-
-        // Add the fragment to the 'fragment_container' FrameLayout
+        // Add featured fragment to the 'featured_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, firstFragment).commit();
-    }
+                .add(R.id.featured_container, featuredFragment).commit();
 
-    @Override
-    protected void showNoConnection() {
-        Toast.makeText(this, "No Internet Connection !!", Toast.LENGTH_SHORT).show();
-    }
+        // Create an explore Fragment to be placed in the activity layout
+        ExploreFragment exploreFragment = new ExploreFragment();
 
-    private void reload() {
-        Intent intent = getIntent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        startActivity(intent);
+        // Add explore fragment to the 'explore_container' FrameLayout
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.explore_container, exploreFragment).commit();
     }
 
     @Override
     public void onPlaceClick(Place place) {
-
+        Intent intent = PlaceDetailsActivity.buildIntent(this, place);
+        startActivity(intent);
     }
 }

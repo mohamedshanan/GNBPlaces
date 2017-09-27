@@ -22,7 +22,7 @@ public class ExploreContract {
 
         void hideLoader();
 
-        void showSnackBar(int resId);
+        void showToast(int resId);
 
         void showTryAgainLayout(String message);
 
