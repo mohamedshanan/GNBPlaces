@@ -5,12 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
 
+import io.realm.RealmObject;
+
 /**
  * Created by shanan on 25/09/2017.
  */
 
 @Parcel
-public class Image {
+public class Image extends RealmObject {
 
     @SerializedName("width")
     @Expose

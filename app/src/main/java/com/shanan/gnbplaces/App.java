@@ -7,6 +7,8 @@ import com.shanan.gnbplaces.di.component.AppComponent;
 import com.shanan.gnbplaces.di.component.DaggerAppComponent;
 import com.shanan.gnbplaces.di.modules.AppModule;
 
+import io.realm.Realm;
+
 /**
  * Created by Shanan on 25/09/2017.
  */
@@ -25,6 +27,7 @@ public class App extends Application {
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
+        Realm.init(this);
     }
 
     public AppComponent getAppComponent() {

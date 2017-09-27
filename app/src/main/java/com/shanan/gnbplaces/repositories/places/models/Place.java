@@ -5,12 +5,19 @@ import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
 
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Shanan on 25/09/2017.
  */
 
 @Parcel
-public class Place {
+public class Place extends RealmObject{
+
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -23,6 +30,9 @@ public class Place {
     @SerializedName("price")
     @Expose
     private Integer price;
+
+    @Index
+    private Boolean isFeatured;
 
     public Integer getId() {
         return id;
@@ -54,5 +64,13 @@ public class Place {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Boolean getFeatured() {
+        return isFeatured;
+    }
+
+    public void setFeatured(Boolean featured) {
+        isFeatured = featured;
     }
 }
