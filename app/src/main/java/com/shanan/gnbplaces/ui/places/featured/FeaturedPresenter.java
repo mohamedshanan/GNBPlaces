@@ -27,30 +27,48 @@ public class FeaturedPresenter implements FeaturedContract.Presenter {
     @Override
     public void getFeaturedPlaces() {
 
-        if (!view.isConnected()) {
-            return;
+        if (view.isConnected()) {
+
+            mPlacesRepository.getFeaturedPlaces(new OnPlacesResponse() {
+                @Override
+                public void onSuccess(List<Place> featuredPlaces) {
+                    onDataLoaded(featuredPlaces);
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    onError(errorMessage);
+                }
+            });
+        } else {
+            mPlacesRepository.getCachedFeaturedPlaces(new OnPlacesResponse() {
+                @Override
+                public void onSuccess(List<Place> featuredPlaces) {
+                    onDataLoaded(featuredPlaces);
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    onError(errorMessage);
+                }
+            });
         }
 
-        mPlacesRepository.getFeaturedPlaces(new OnPlacesResponse() {
-            @Override
-            public void onSuccess(List<Place> featuredPlaces) {
-                view.hideLoader();
+    }
 
-                if (featuredPlaces == null || featuredPlaces.isEmpty()) {
-                    view.showTryAgainLayout(R.string.no_featured_places);
-                    return;
-                }
-                view.showFeaturedPlaces(featuredPlaces);
+    private void onError(String errorMessage) {
+        view.hideLoader();
+        view.showTryAgainLayout(errorMessage);
+    }
 
-            }
+    private void onDataLoaded(List<Place> featuredPlaces) {
+        view.hideLoader();
 
-            @Override
-            public void onFailure(String errorMessage) {
-                view.hideLoader();
-                view.showTryAgainLayout(errorMessage);
-            }
-        });
-
+        if (featuredPlaces == null || featuredPlaces.isEmpty()) {
+            view.showTryAgainLayout(R.string.no_featured_places);
+            return;
+        }
+        view.showFeaturedPlaces(featuredPlaces);
     }
 
     @Override

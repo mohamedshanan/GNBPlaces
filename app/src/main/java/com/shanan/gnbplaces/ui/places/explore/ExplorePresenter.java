@@ -33,15 +33,11 @@ public class ExplorePresenter implements ExploreContract.Presenter {
     @Override
     public void explorePlaces() {
 
-        if (!view.isConnected()) {
-            return;
-        }
-
         if (!isNoMoreData) {
             if (lastPlaceIndex == FIRST_PLACE) {
                 view.showLoader();
             }
-            explore();
+            explore(view.isConnected());
         } else {
             Log.i(TAG, "No more places");
         }
@@ -55,36 +51,61 @@ public class ExplorePresenter implements ExploreContract.Presenter {
     }
 
 
-    private void explore() {
+    private void explore(boolean isConnected) {
         Log.d("Endless", "from: " + lastPlaceIndex);
-        mPlacesRepository.explorePlaces(COUNT, lastPlaceIndex, new OnPlacesResponse() {
-            @Override
-            public void onSuccess(List<Place> places) {
-                view.hideLoader();
 
-                if (places == null || places.isEmpty()) {
-                    isNoMoreData = true;
-                    if (lastPlaceIndex == 0) {
-                        view.showTryAgainLayout(R.string.no_places);
-                    }
-                    return;
+        if (isConnected) {
+            mPlacesRepository.explorePlaces(COUNT, lastPlaceIndex, new OnPlacesResponse() {
+                @Override
+                public void onSuccess(List<Place> places) {
+                    onDataLoad(places);
                 }
 
-                if (lastPlaceIndex == FIRST_PLACE) {
-                    view.showPlaces(true, places);
-                } else {
-                    view.showPlaces(false, places);
+                @Override
+                public void onFailure(String errorMessage) {
+                    onError(errorMessage);
+                }
+            });
+        } else {
+            mPlacesRepository.getCachedPlaces(COUNT, lastPlaceIndex, new OnPlacesResponse() {
+                @Override
+                public void onSuccess(List<Place> places) {
+                    onDataLoad(places);
                 }
 
-                // prepare lastPlaceIndex for the next page
-                lastPlaceIndex += COUNT;
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                view.hideLoader();
-                view.showTryAgainLayout(errorMessage);
-            }
-        });
+                @Override
+                public void onFailure(String errorMessage) {
+                    onError(errorMessage);
+                }
+            });
+        }
     }
+
+    private void onDataLoad(List<Place> places) {
+        view.hideLoader();
+
+        if (places == null || places.isEmpty()) {
+            isNoMoreData = true;
+            if (lastPlaceIndex == 0) {
+                view.showTryAgainLayout(R.string.no_places);
+            }
+            return;
+        }
+
+        if (lastPlaceIndex == FIRST_PLACE) {
+            view.showPlaces(true, places);
+        } else {
+            view.showPlaces(false, places);
+        }
+
+        // prepare lastPlaceIndex for the next page
+        lastPlaceIndex += COUNT;
+    }
+
+
+    private void onError(String errorMessage) {
+        view.hideLoader();
+        view.showTryAgainLayout(errorMessage);
+    }
+
 }
