@@ -2,4 +2,12 @@
     <string name="app_name">GNBPlaces</string>
     <string name="no_featured_places">No featured places!!</string>
     <string name="no_places">No places!!</string>
+
+    <string name="description">description</string>
+    <string name="price">$ %1$d</string>
+    <string name="sights_of_egypt">Sights Of Egypt</string>
+    <string name="featured">Featured</string>
+    <string name="expolre">Expolre</string>
+    <string name="place_error">Error getting place data!!</string>
+    <string name="no_conncection">No interner connection, Please check your connectivity and try again.</string>
 </resources>

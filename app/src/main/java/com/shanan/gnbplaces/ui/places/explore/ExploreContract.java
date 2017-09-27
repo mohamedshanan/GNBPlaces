@@ -1,4 +1,4 @@
-package com.shanan.gnbplaces.ui.PlacesList;
+package com.shanan.gnbplaces.ui.places.explore;
 
 import com.shanan.gnbplaces.repositories.places.models.Place;
 
@@ -8,25 +8,21 @@ import java.util.List;
  * Created by Shanan on 23/09/2017.
  */
 
-public class PlacesContract {
+public class ExploreContract {
 
-    interface View {
-
-        void showFeaturedPlaces(List<Place> places);
+    public interface View {
 
         void showPlaces(boolean clearing, List<Place> places);
-
-        void showLoader();
-
-        void hideLoader();
 
         void showLoadMoreProgress();
 
         void dismissLoadMoreProgress();
 
-        void clearPlaces();
+        void showLoader();
 
-        void showSnackBar(int resId);
+        void hideLoader();
+
+        void showToast(int resId);
 
         void showTryAgainLayout(String message);
 
@@ -35,10 +31,12 @@ public class PlacesContract {
         void showTryAgainLayout(int resId);
     }
 
-    interface Presenter {
 
-        void getFeaturedPlaces();
+    public interface Presenter {
 
         void explorePlaces();
+
+        void onDestroyView();
+
     }
 }

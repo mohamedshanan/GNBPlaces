@@ -8,4 +8,5 @@ public interface PlacesRepository {
     void getFeaturedPlaces(OnPlacesResponse onPlacesResponse);
     void explorePlaces(int count, int from, OnPlacesResponse onPlacesResponse);
     boolean isLoading();
+    void unSubscribe();
 }

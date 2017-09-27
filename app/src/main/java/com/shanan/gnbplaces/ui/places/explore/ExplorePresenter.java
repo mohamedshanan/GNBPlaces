@@ -1,4 +1,4 @@
-package com.shanan.gnbplaces.ui.PlacesList;
+package com.shanan.gnbplaces.ui.places.explore;
 
 import android.util.Log;
 
@@ -14,50 +14,20 @@ import java.util.List;
  * Created by Shanan on 23/09/2017.
  */
 
-public class PlacesPresenter implements PlacesContract.Presenter {
+public class ExplorePresenter implements ExploreContract.Presenter {
 
-    private static final String TAG = PlacesPresenter.class.getSimpleName();
+    private static final String TAG = ExplorePresenter.class.getSimpleName();
     private final static int FIRST_PLACE = 0;
-    private final static int COUNT = 10;
+    private final static int COUNT = 6;
 
-    private final PlacesContract.View view;
+    private final ExploreContract.View view;
     private final PlacesRepository mPlacesRepository = new ProdPlacesRepository();
 
     private int lastPlaceIndex = 0;
     private boolean isNoMoreData;
 
-    public PlacesPresenter(PlacesContract.View view) {
+    public ExplorePresenter(ExploreContract.View view) {
         this.view = view;
-    }
-
-    @Override
-    public void getFeaturedPlaces() {
-
-        if (!view.isConnected()) {
-            return;
-        }
-
-        mPlacesRepository.getFeaturedPlaces(new OnPlacesResponse() {
-            @Override
-            public void onSuccess(List<Place> featuredPlaces) {
-                view.hideLoader();
-
-                if (featuredPlaces == null || featuredPlaces.isEmpty()) {
-                    view.showTryAgainLayout(R.string.no_featured_places);
-                    return;
-                }
-                view.showFeaturedPlaces(featuredPlaces);
-
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                view.hideLoader();
-                view.showTryAgainLayout(errorMessage);
-            }
-        });
-
-
     }
 
     @Override
@@ -77,9 +47,16 @@ public class PlacesPresenter implements PlacesContract.Presenter {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        if (mPlacesRepository != null) {
+            mPlacesRepository.unSubscribe();
+        }
+    }
 
-    public void explore() {
 
+    private void explore() {
+        Log.d("Endless", "from: " + lastPlaceIndex);
         mPlacesRepository.explorePlaces(COUNT, lastPlaceIndex, new OnPlacesResponse() {
             @Override
             public void onSuccess(List<Place> places) {
